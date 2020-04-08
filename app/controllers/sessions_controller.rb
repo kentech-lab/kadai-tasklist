@@ -1,4 +1,9 @@
 class SessionsController < ApplicationController
+  # before_action :require_user_logged_in
+  # before_action :current_user
+
+  
+  
   def new
   end
 

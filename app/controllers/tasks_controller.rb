@@ -1,17 +1,26 @@
 class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
-  before_action :require_user_logged_in, only: [:index]
+  before_action :require_user_logged_in
+  # ログインしないとタスク表示されない
+  before_action :require_user_logged_in, only: [:index, :show, :edit, :update, :destroy]
+  before_action :current_user, only: [:show, :edit, :update, :destroy]
+  
   
 
   def index
-    @tasks=Task.all
+    # @tasks=Task.all
+    if logged_in?
+      @tasks = current_user.tasks.order(id: :desc).page(params[:page])
+    end
+    # @tasks = current_user.tasks.order(id: :desc).page(params[:page])
   end
   
   def show
-    
   end
   
   def new
+    
+    
     @task=Task.new
   end
   
@@ -54,10 +63,18 @@ class TasksController < ApplicationController
   private
   
   def set_task
-    @task=Task.find(params[:id])
+    if logged_in?
+      @task = current_user.tasks.find_by(id: params[:id])
+      unless @task
+        redirect_to login_url
+      end
+    else
+      @task=Task.find(params[:id])
+    end
   end
   
   def task_params
     params.require(:task).permit(:content, :status)
   end
+  
 end
