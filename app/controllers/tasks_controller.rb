@@ -3,7 +3,7 @@ class TasksController < ApplicationController
   before_action :require_user_logged_in
   # ログインしないとタスク表示されない
   before_action :require_user_logged_in, only: [:index, :show, :edit, :update, :destroy]
-  before_action :current_user, only: [:show, :edit, :update, :destroy]
+  before_action :current_user
   
   
 
@@ -66,7 +66,7 @@ class TasksController < ApplicationController
     if logged_in?
       @task = current_user.tasks.find_by(id: params[:id])
       unless @task
-        redirect_to login_url
+        redirect_to root_url
       end
     else
       @task=Task.find(params[:id])
