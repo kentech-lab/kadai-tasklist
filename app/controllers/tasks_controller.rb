@@ -12,13 +12,9 @@ class TasksController < ApplicationController
   end
   
   def new
-    @task = current_user.tasks.find_by(id: params[:id])
-      unless @task
-        redirect_to login_path
-      else
-        @task=Task.new
-      end
     
+    @task=Task.new
+
     
   end
   
